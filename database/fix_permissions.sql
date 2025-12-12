@@ -1,0 +1,6 @@
+\c ielo_db
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ielo_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ielo_user;
+ALTER TABLE users OWNER TO ielo_user;
+ALTER TABLE tasks OWNER TO ielo_user;
+ALTER TABLE history OWNER TO ielo_user;

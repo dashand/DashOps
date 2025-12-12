@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Application PHP/Apache
+  app:
+    build: .
+    container_name: dashops_app
+    restart: unless-stopped
+    ports:
+      - "443:443" # Access via https://localhost
+    environment:
+      # Database Configuration
+      - DB_HOST=db
+      - DB_NAME=ielo_db
+      - DB_USER=ielo_user
+      - DB_PASS=ielo_password
+      # LDAP Configuration (Optional)
+      - LDAP_ENABLED=${LDAP_ENABLED:-false}
+      - LDAP_HOST=${LDAP_HOST:-}
+      - LDAP_PORT=${LDAP_PORT:-389}
+      - LDAP_BASE_DN=${LDAP_BASE_DN:-}
+      - LDAP_BIND_DN=${LDAP_BIND_DN:-}
+      - LDAP_BIND_PASS=${LDAP_BIND_PASS:-}
+    depends_on:
+      - db
+    networks:
+      - dashops_net
+
+  # Base de données PostgreSQL
+  db:
+    image: postgres:15
+    container_name: dashops_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=ielo_db
+      - POSTGRES_USER=ielo_user
+      - POSTGRES_PASSWORD=ielo_password
+    volumes:
+      # Script d'initialisation (Schema + Données par défaut)
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # Persistance des données
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - dashops_net
+
+networks:
+  dashops_net:
+    driver: bridge
+
+volumes:
+  db_data:
