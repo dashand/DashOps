@@ -12,12 +12,13 @@ requireLogin();
 // --- Récupération des données du formulaire ---
 // Utilisation de l'opérateur '??' pour définir des valeurs par défaut si les champs sont manquants.
 $action = $_POST['action'] ?? '';
-$taskId = $_POST['task_id'] ?? null;
+$taskId = $_POST['task_id'] ?? $_POST['id'] ?? null;
 $title = $_POST['title'] ?? '';
 $description = $_POST['description'] ?? '';
 $family = $_POST['family'] ?? 'IG'; // Famille par défaut
 $assignedTo = $_POST['assigned_to'] ?? null; // Null si "Personne" sélectionné
-$link = $_POST['link'] ?? '';
+$status = $_POST['status'] ?? '';
+$link = $_POST['external_link'] ?? '';
 $currentUser = getCurrentUser();
 
 /**
@@ -71,14 +72,14 @@ try {
 
             if ($oldTask) {
                 // Mise à jour de la tâche
-                $stmt = $pdo->prepare("UPDATE tasks SET title = ?, description = ?, family = ?, assigned_to = ?, external_link = ? WHERE id = ?");
-                $stmt->execute([$title, $description, $family, $assignedTo, $link, $taskId]);
+                $stmt = $pdo->prepare("UPDATE tasks SET title = ?, description = ?, family = ?, assigned_to = ?, external_link = ?, status = ? WHERE id = ?");
+                $stmt->execute([$title, $description, $family, $assignedTo, $link, $status, $taskId]);
 
                 // Logs des changements importants
                 if ($oldTask['title'] !== $title)
                     logHistory($pdo, $taskId, 'modification', "Titre modifié", $oldTask['title'], $title);
-                if ($oldTask['status'] !== $_POST['status']) {
-                    // Note : Le statut est généralement mis à jour via 'move_task' mais peut l'être ici aussi
+                if ($oldTask['status'] !== $status) {
+                    logHistory($pdo, $taskId, 'changement_statut', "Statut changé via modification", $oldTask['status'], $status);
                 }
                 if ($oldTask['assigned_to'] !== $assignedTo)
                     logHistory($pdo, $taskId, 'modification', "Réassigné", $oldTask['assigned_to'], $assignedTo);
