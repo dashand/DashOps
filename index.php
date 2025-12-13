@@ -314,9 +314,14 @@ $statusColors = [
                                         title="Assigné à : <?= htmlspecialchars($task['assigned_to'] ?: 'Personne') ?>">
                                         <?= getInitials($task['assigned_to']) ?>
                                     </div>
-                                    <?php if ($task['external_link']): ?>
-                                        <a href="<?= htmlspecialchars($task['external_link']) ?>" target="_blank"
-                                            onclick="event.stopPropagation();" title="Ouvrir le lien">
+                                    <?php if ($task['external_link']):
+                                        $linkUrl = htmlspecialchars($task['external_link']);
+                                        if (!preg_match("~^(?:f|ht)tps?://~i", $linkUrl)) {
+                                            $linkUrl = "https://" . $linkUrl;
+                                        }
+                                        ?>
+                                        <a href="<?= $linkUrl ?>" target="_blank" onclick="event.stopPropagation();"
+                                            title="Ouvrir le lien">
                                             <i class="bi bi-link-45deg text-primary"></i>
                                         </a>
                                     <?php endif; ?>
