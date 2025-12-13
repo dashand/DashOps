@@ -75,6 +75,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // ==========================================
         // GESTION COLONNES (FAMILLES)
         // ==========================================
+
+
+    } elseif ($action === 'delete') {
+        $id = intval($_POST['id'] ?? 0);
+        // Empêcher la suppression de l'admin principal (ID 1 ou username 'admin')
+        if ($id === 1) {
+            $error = "Impossible de supprimer le compte administrateur principal.";
+        } else {
+            // Sécurité supplémentaire : vérifier le username avant suppression
+            $stmt = $pdo->prepare("SELECT username FROM users WHERE id = ?");
+            $stmt->execute([$id]);
+            $userToDelete = $stmt->fetch();
+
+            if ($userToDelete && $userToDelete['username'] === 'admin') {
+                $error = "Impossible de supprimer le compte administrateur principal.";
+            } elseif ($userToDelete) {
+                try {
+                    $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+                    if ($stmt->execute([$id])) {
+                        $message = "Utilisateur supprimé avec succès.";
+                    } else {
+                        $error = "Erreur lors de la suppression.";
+                    }
+                } catch (PDOException $e) {
+                    $error = "Erreur SQL : " . $e->getMessage();
+                }
+            } else {
+                $error = "Utilisateur introuvable.";
+            }
+        }
+
     } elseif ($action === 'create_family') {
         $name = trim($_POST['name'] ?? '');
 
@@ -318,6 +349,16 @@ $familiesList = $stmtFamilies->fetchAll(PDO::FETCH_ASSOC);
                                             onclick="openEditModal(<?= htmlspecialchars(json_encode($user)) ?>)">
                                             <i class="bi bi-pencil"></i>
                                         </button>
+                                        <?php if ($user['username'] !== 'admin' && $user['id'] != 1): ?>
+                                            <form method="POST" class="d-inline"
+                                                onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
