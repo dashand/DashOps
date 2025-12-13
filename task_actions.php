@@ -55,7 +55,7 @@ try {
                 $assignedTo = $currentUser;
             }
 
-            $stmt = $pdo->prepare("INSERT INTO tasks (title, description, family, assigned_to, link, status, created_by) VALUES (?, ?, ?, ?, ?, 'en_cours', ?)");
+            $stmt = $pdo->prepare("INSERT INTO tasks (title, description, family, assigned_to, external_link, status, created_by) VALUES (?, ?, ?, ?, ?, 'en_cours', ?)");
             $stmt->execute([$title, $description, $family, $assignedTo, $link, $currentUser]);
 
             $newTaskId = $pdo->lastInsertId();
@@ -71,7 +71,7 @@ try {
 
             if ($oldTask) {
                 // Mise à jour de la tâche
-                $stmt = $pdo->prepare("UPDATE tasks SET title = ?, description = ?, family = ?, assigned_to = ?, link = ? WHERE id = ?");
+                $stmt = $pdo->prepare("UPDATE tasks SET title = ?, description = ?, family = ?, assigned_to = ?, external_link = ? WHERE id = ?");
                 $stmt->execute([$title, $description, $family, $assignedTo, $link, $taskId]);
 
                 // Logs des changements importants
