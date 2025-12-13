@@ -1,6 +1,6 @@
 # DashOps 🚀
 
-**DashOps** is a lightweight, self-hosted task management dashboard designed for Operations and IT teams. It provides a simple Kanban view to track incidents, maintenance tasks, and daily operations with a focus on speed and simplicity.
+**DashOps** (Dashboard Ops) is a lightweight, self-hosted task management dashboard designed for Operations and IT teams. It provides a simple Kanban view to track incidents, maintenance tasks, and daily operations with a focus on speed and simplicity.
 
 ![DashOps Screenshot](https://via.placeholder.com/800x400?text=DashOps+Dashboard+Preview) 
 *(Add a real screenshot here)*
@@ -85,7 +85,7 @@ You can customize the application directly from the **Admin Panel** (logged in a
 
 # 🇫🇷 Version Française
 
-**DashOps** est un tableau de bord de gestion de tâches léger et auto-hébergé, conçu pour les équipes Opérations et IT. Il offre une vue Kanban simple pour suivre les incidents, les tâches de maintenance et les opérations quotidiennes, en mettant l'accent sur la rapidité et la simplicité.
+**DashOps** (Dashboard Ops)est un tableau de bord de gestion de tâches léger et auto-hébergé, conçu pour les équipes Opérations et IT. Il offre une vue Kanban simple pour suivre les incidents, les tâches de maintenance et les opérations quotidiennes, en mettant l'accent sur la rapidité et la simplicité.
 
 ## ✨ Fonctionnalités
 
