@@ -12,6 +12,9 @@ requireLogin();
 // --- Récupération des données du formulaire ---
 // Utilisation de l'opérateur '??' pour définir des valeurs par défaut si les champs sont manquants.
 $action = $_POST['action'] ?? '';
+if (isset($_POST['delete'])) {
+    $action = 'delete';
+}
 $taskId = $_POST['task_id'] ?? $_POST['id'] ?? null;
 $title = $_POST['title'] ?? '';
 $description = $_POST['description'] ?? '';
