@@ -29,5 +29,10 @@ COPY . /var/www/html/
 # Set working directory
 WORKDIR /var/www/html
 
+# Fix permissions for Apache
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
+
+
 # Expose port 443 (HTTPS)
 EXPOSE 443
