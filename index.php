@@ -568,10 +568,10 @@ $statusColors = [
                         const row = `
                             <tr>
                                 <td>${new Date(log.created_at).toLocaleString('fr-FR')}</td>
-                                <td>${log.username || 'Inconnu'}</td>
+                                <td>${log.user_name || 'Inconnu'}</td>
                                 <td>
                                     ${taskTitleDisplay}
-                                    <small class="text-muted">${log.details || ''}</small>
+                                    <div style="white-space: pre-line;">${log.details || ''}</div>
                                 </td>
                             </tr>
                         `;

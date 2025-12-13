@@ -75,17 +75,32 @@ try {
                 $stmt = $pdo->prepare("UPDATE tasks SET title = ?, description = ?, family = ?, assigned_to = ?, external_link = ?, status = ? WHERE id = ?");
                 $stmt->execute([$title, $description, $family, $assignedTo, $link, $status, $taskId]);
 
-                // Logs des changements importants
-                if ($oldTask['title'] !== $title)
-                    logHistory($pdo, $taskId, 'modification', "Titre modifié", $oldTask['title'], $title);
-                if ($oldTask['status'] !== $status) {
-                    logHistory($pdo, $taskId, 'changement_statut', "Statut changé via modification", $oldTask['status'], $status);
+                // Logs des changements
+                $changes = [];
+                if ($oldTask['title'] !== $title) {
+                    $changes[] = "Titre : {$oldTask['title']} -> $title";
                 }
-                if ($oldTask['assigned_to'] !== $assignedTo)
-                    logHistory($pdo, $taskId, 'modification', "Réassigné", $oldTask['assigned_to'], $assignedTo);
+                if ($oldTask['status'] !== $status) {
+                    $changes[] = "Statut : " . ($oldTask['status'] ?? 'N/A') . " -> $status";
+                }
+                if ($oldTask['assigned_to'] !== $assignedTo) {
+                    $changes[] = "Assigné à : " . ($oldTask['assigned_to'] ?? 'Personne') . " -> " . ($assignedTo ?? 'Personne');
+                }
+                if ($oldTask['family'] !== $family) {
+                    $changes[] = "Famille : {$oldTask['family']} -> $family";
+                }
+                if ($oldTask['description'] !== $description) {
+                    $changes[] = "Description modifiée";
+                }
+                if ($oldTask['external_link'] !== $link) {
+                    $changes[] = "Lien externe modifié";
+                }
 
-                // Log générique de modification
-                logHistory($pdo, $taskId, 'modification', "Tâche mise à jour par $currentUser");
+                if (!empty($changes)) {
+                    $details = implode("\n", $changes);
+                    // On passe null pour old_value/new_value car tout est dans details
+                    logHistory($pdo, $taskId, 'modification', $details);
+                }
             }
         }
     } elseif ($action === 'delete') {
