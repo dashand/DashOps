@@ -71,3 +71,18 @@ ON CONFLICT (name) DO NOTHING;
 INSERT INTO users (username, password_hash, role, auth_source)
 VALUES ('admin', '$2y$10$nGb9IptlcluFeSTRwWIwdeRBTRRzmTC0Ocm8f3MSDMw9VbmRE.G/W', 'admin', 'local')
 ON CONFLICT (username) DO NOTHING;
+
+-- ==========================================
+-- 3. Permissions
+-- ==========================================
+
+-- Grant permissions to application user (ielo_user)
+-- Note: Assuming the database is named 'ielo_db' and user is 'ielo_user'
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ielo_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ielo_user;
+
+-- Ensure ownership
+ALTER TABLE users OWNER TO ielo_user;
+ALTER TABLE tasks OWNER TO ielo_user;
+ALTER TABLE history OWNER TO ielo_user;
+ALTER TABLE task_families OWNER TO ielo_user;
